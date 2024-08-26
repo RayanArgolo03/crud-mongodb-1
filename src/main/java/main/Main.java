@@ -1,19 +1,49 @@
 package main;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
-public class Main {
+
+import controllers.UserController;
+import enums.UserOption;
+import jpa.JpaManager;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.log4j.Log4j2;
+import repositories.impl.UserRepositoryImpl;
+import services.UserService;
+import utils.ReaderUtils;
+
+import java.util.InputMismatchException;
+
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Log4j2
+public final class Main {
+
+    static UserController CONTROLLER = new UserController(new UserService(
+            new UserRepositoryImpl(new JpaManager("h2"))
+    ));
+
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+        UserOption option;
+        loop:
+        do {
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
-        }
+            try {
+                option = ReaderUtils.readOption();
+
+                switch (option) {
+                    case CREATE -> CONTROLLER.create();
+                    case READ -> CONTROLLER.read();
+                    case UPDATE -> CONTROLLER.update();
+                    case DELETE -> CONTROLLER.delete();
+                }
+
+            } catch (InputMismatchException | ArrayIndexOutOfBoundsException e) {
+                log.info("Invalid option! Stopping the program.. ");
+                break loop;
+            }
+
+        } while (option != UserOption.OUT);
+
     }
+
 }
