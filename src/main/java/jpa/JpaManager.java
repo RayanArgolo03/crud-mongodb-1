@@ -5,25 +5,28 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.java.Log;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Getter
 @Log4j2
 public final class JpaManager {
 
-    EntityManager entityManager;
+    javax.persistence.EntityManager noSqlEntityManager;
+    EntityManager sqlEntityManager;
 
-    public JpaManager(String persistenceUnit) {
+    public JpaManager(String noSqlPersistenceUnit, String sqlPersistenceUnit) {
 
-        Objects.requireNonNull(persistenceUnit, "Persistence unit can´t be null!");
+        Objects.requireNonNull(noSqlPersistenceUnit, "NoSQL Persistence unit can´t be null!");
+        Objects.requireNonNull(sqlPersistenceUnit, "SQL Persistence unit can´t be null!");
 
-        this.entityManager = Persistence.createEntityManagerFactory(persistenceUnit)
+        noSqlEntityManager = javax.persistence.Persistence.createEntityManagerFactory(noSqlPersistenceUnit)
+                .createEntityManager();
+
+        sqlEntityManager = Persistence.createEntityManagerFactory(sqlPersistenceUnit)
                 .createEntityManager();
     }
 
@@ -31,9 +34,9 @@ public final class JpaManager {
 
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
+            transaction = sqlEntityManager.getTransaction();
             transaction.begin();
-            action.accept(entityManager);
+            action.accept(sqlEntityManager);
             transaction.commit();
 
         } catch (Exception e) {
@@ -54,5 +57,7 @@ public final class JpaManager {
 
     }
 
-    public void clearPersistenceContext(){ entityManager.clear(); }
+    public void clearPersistenceContext() {
+        sqlEntityManager.clear();
+    }
 }

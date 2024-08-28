@@ -19,7 +19,7 @@ import java.util.InputMismatchException;
 public final class Main {
 
     static UserController CONTROLLER = new UserController(new UserService(
-            new UserRepositoryImpl(new JpaManager("h2"))
+            new UserRepositoryImpl(new JpaManager("mongodb", "h2"))
     ));
 
     public static void main(String[] args) {
