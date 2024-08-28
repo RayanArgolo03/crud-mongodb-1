@@ -18,7 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 
-@Entity
+
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "users")
