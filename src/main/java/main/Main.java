@@ -1,6 +1,7 @@
 package main;
 
 
+import com.mongodb.MongoClient;
 import controllers.UserController;
 import enums.UserOption;
 import jpa.JpaManager;

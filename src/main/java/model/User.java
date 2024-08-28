@@ -2,15 +2,14 @@ package model;
 
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.java.Log;
+import org.bson.types.ObjectId;
 import org.hibernate.annotations.*;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,24 +17,26 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 
-
-@DynamicInsert
-@DynamicUpdate
+@Setter
+@Getter
+@Entity
 @Table(name = "users")
 public final class User {
 
-    @GeneratedValue
-    @Id
-    final UUID id;
+    @javax.persistence.GeneratedValue
+    @javax.persistence.Id
+    final ObjectId id;
 
-    @Setter
-    @Column(name = "first_name", nullable = false)
+    @javax.persistence.Column(unique = true, nullable = false)
+    String username;
+
+    @javax.persistence.Column(nullable = false)
+    String password;
+
+    @javax.persistence.Column(nullable = false)
     String firstName;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    final Login login;
-
+    @javax.persistence.Column(name = "creation_date")
     @CreationTimestamp
-    @Column(name = "creation_date")
     final LocalDateTime creationDate;
 }

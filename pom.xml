@@ -46,15 +46,6 @@
             <version>6.5.2.Final</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.hibernate.ogm/hibernate-ogm-core -->
-        <dependency>
-            <groupId>org.hibernate.ogm</groupId>
-            <artifactId>hibernate-ogm-core</artifactId>
-            <version>5.4.1.Final</version>
-        </dependency>
-
-
-
         <!-- https://mvnrepository.com/artifact/org.hibernate.ogm/hibernate-ogm-mongodb -->
         <dependency>
             <groupId>org.hibernate.ogm</groupId>
