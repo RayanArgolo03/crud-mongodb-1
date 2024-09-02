@@ -9,5 +9,8 @@
         <Root level="info">
             <AppenderRef ref="LogToConsole"/>
         </Root>
+        <logger name="org.hibernate" level="OFF" additivity="false">
+            <AppenderRef ref="LogToConsole"/>
+        </logger>
     </Loggers>
 </Configuration>

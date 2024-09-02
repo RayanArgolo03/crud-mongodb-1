@@ -1,42 +1,23 @@
 package model;
 
-import jakarta.persistence.*;
-import jakarta.persistence.CascadeType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.java.Log;
+import lombok.experimental.NonFinal;
+import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.hibernate.annotations.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
-@NoArgsConstructor(force = true)
+@AllArgsConstructor
+@ToString
 
-@Setter
-@Getter
-@Entity
-@Table(name = "users")
-public final class User {
+public final class User{
 
-    @javax.persistence.GeneratedValue
-    @javax.persistence.Id
-    final ObjectId id;
-
-    @javax.persistence.Column(unique = true, nullable = false)
-    String username;
-
-    @javax.persistence.Column(nullable = false)
-    String password;
-
-    @javax.persistence.Column(nullable = false)
+    ObjectId id;
+    final Login login;
+    @NonFinal
     String firstName;
-
-    @javax.persistence.Column(name = "creation_date")
-    @CreationTimestamp
     final LocalDateTime creationDate;
+
 }

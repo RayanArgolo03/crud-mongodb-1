@@ -1,10 +1,9 @@
-package main;
+package app;
 
 
-import com.mongodb.MongoClient;
 import controllers.UserController;
 import enums.UserOption;
-import jpa.JpaManager;
+import jpa.DatabaseManager;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
@@ -18,9 +17,11 @@ import java.util.InputMismatchException;
 @Log4j2
 public final class Main {
 
+    static DatabaseManager MANAGER = new DatabaseManager("h2");
+
     static UserController CONTROLLER = new UserController(new UserService(
-            new UserRepositoryImpl(new JpaManager("mongodb", "h2"))
-    ));
+            new UserRepositoryImpl(MANAGER))
+    );
 
     public static void main(String[] args) {
 
