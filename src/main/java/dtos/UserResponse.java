@@ -19,6 +19,6 @@ public final class UserResponse {
 
     @Override
     public String toString() {
-        return firstName + " - Created at " + createdAt;
+        return "Id " + idInHex + " - " + firstName + " - Created at " + createdAt;
     }
 }

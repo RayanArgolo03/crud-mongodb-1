@@ -1,12 +1,11 @@
 package controllers;
 
-import com.google.gson.Gson;
 import dtos.UserRequest;
 import dtos.UserResponse;
+import filters.UserFilter;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import model.Login;
 import model.User;
@@ -14,6 +13,8 @@ import org.bson.Document;
 import services.UserService;
 import utils.GsonUtils;
 import utils.ReaderUtils;
+
+import java.util.Set;
 
 @Log4j2
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -48,18 +49,21 @@ public final class UserController {
                 new UserRequest(name, email, new Login(username, password))
         );
 
-        final Document document = service.save(
-                GsonUtils.entityToMongoDocument(user)
-        );
+        final Document document = service.save(user);
 
-        user = GsonUtils.mongoDocumentToEntity(document, User.class);
+        user = GsonUtils.documentToEntity(document, User.class);
         user.setId(document.getObjectId("id"));
 
         return service.userToResponse(user);
     }
 
-    public void read() {
+    public Set<UserResponse> read() {
 
+        final UserFilter userFilter = service.readFilters();
+        final Set<UserResponse> users = service.findByFilters(userFilter);
+
+        log.info("Users found! \n");
+        return users;
     }
 
     public void update() {

@@ -38,13 +38,14 @@ public final class Main {
         do {
 
             try {
-                option = ReaderUtils.readOption();
+                option = ReaderUtils.readOption(UserOption.class);
 
                 switch (option) {
                     case CREATE -> System.out.printf("User created! %s", CONTROLLER.create());
 
-                    //Todo continuar daqui
-                    case READ -> CONTROLLER.read();
+                    case READ -> CONTROLLER.read().forEach(System.out::println);
+
+                    //Todo continuar de update
                     case UPDATE -> CONTROLLER.update();
                     case DELETE -> CONTROLLER.delete();
                 }

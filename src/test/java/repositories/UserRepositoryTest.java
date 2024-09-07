@@ -1,8 +1,7 @@
 package repositories;
 
-import com.google.gson.Gson;
 import database.MongoConnection;
-import lombok.extern.java.Log;
+import filters.UserFilter;
 import model.Login;
 import model.User;
 import org.bson.Document;
@@ -12,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import repositories.impl.UserRepositoryImpl;
 import repositories.interfaces.UserRepository;
 import utils.GsonUtils;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,7 +25,7 @@ class UserRepositoryTest {
     @BeforeEach
     void setUp() {
         repository = new UserRepositoryImpl(MongoConnection.getInstance());
-        document = GsonUtils.entityToMongoDocument(new User("pa", "pa", new Login("pa", "pa")));
+        document = GsonUtils.entityToDocument(new User("pa", "pa", new Login("pa", "pa")));
     }
 
     @Nested
@@ -32,7 +33,9 @@ class UserRepositoryTest {
 
         @Test
         void test() {
-            //Todo teste read
+            User entity = new User("pa", "pa", new Login("pa", "pa"));
+            Set<Document> documents = repository.findByFilters(new UserFilter(entity.getName(), entity.getEmail(), entity.getLogin().getUsername(), entity.getLogin().getPassword()));
+            assertEquals(1, documents.size());
         }
 
     }
