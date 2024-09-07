@@ -1,10 +1,7 @@
 package repositories;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
-import jpa.DatabaseManager;
+import database.MongoConnection;
 import lombok.extern.java.Log;
 import model.Login;
 import model.User;
@@ -13,17 +10,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import repositories.impl.UserRepositoryImpl;
+import repositories.interfaces.UserRepository;
+import utils.GsonUtils;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserRepositoryTest {
 
     private UserRepository repository;
+    private Document document;
 
     @BeforeEach
     void setUp() {
-        repository = new UserRepositoryImpl(new DatabaseManager("h2"));
+        repository = new UserRepositoryImpl(MongoConnection.getInstance());
+        document = GsonUtils.entityToMongoDocument(new User("pa", "pa", new Login("pa", "pa")));
     }
 
     @Nested
@@ -31,18 +32,7 @@ class UserRepositoryTest {
 
         @Test
         void test() {
-            User user = new User(null, new Login(null, "pa", "pa", LocalDateTime.now()), "paa", LocalDateTime.now());
-
-            GsonBuilder gsonBuilderDate = new GsonBuilder()
-                    .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>)
-                            (localDateTime, type, context) -> {
-                                String formattedDateTime = localDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-                                return new JsonPrimitive(formattedDateTime);
-                            });
-
-            Gson gson = gsonBuilderDate.create();
-
-            repository.save(Document.parse(gson.toJson(user)));
+            //Todo teste read
         }
 
     }

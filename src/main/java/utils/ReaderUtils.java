@@ -25,4 +25,9 @@ public final class ReaderUtils {
         return VALUES[option];
     }
 
+    public static String readString(final String title) {
+        System.out.printf("\n Enter with %s:", title);
+        return SCANNER.next();
+    }
+
 }

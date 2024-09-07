@@ -1,22 +1,19 @@
 package model;
 
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
 import org.bson.types.ObjectId;
 
-import java.time.LocalDateTime;
-
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Getter
 public final class Login {
 
-    @NonFinal
-    ObjectId id;
+    ObjectId id = new ObjectId();
     String username;
     String password;
-    LocalDateTime creationDate;
 
 }

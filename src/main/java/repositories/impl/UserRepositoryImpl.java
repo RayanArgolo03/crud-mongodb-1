@@ -1,26 +1,34 @@
 package repositories.impl;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.result.InsertOneResult;
-import jpa.DatabaseManager;
+import database.MongoConnection;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import model.User;
 import org.bson.Document;
-import repositories.UserRepository;
+import repositories.interfaces.UserRepository;
 
-import javax.print.Doc;
-import java.time.LocalDateTime;
-import java.util.function.Consumer;
+import java.util.Optional;
+
+import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Projections.*;
+
 
 @AllArgsConstructor
-@RequiredArgsConstructor
 public final class UserRepositoryImpl implements UserRepository {
 
-    DatabaseManager databaseManager;
+    private final MongoConnection connection;
 
     @Override
-    public void save(final Document document) {
-        return;
+    public Optional<Document> findUsername(final String username) {
+        return Optional.ofNullable(
+                connection.getCollection()
+                .find(eq("lastName", username))
+                .projection(fields(include("username"), excludeId()))
+                .first()
+        );
+    }
+
+    @Override
+    public Document save(final Document document) {
+        connection.getCollection().insertOne(document);
+        return document;
     }
 }

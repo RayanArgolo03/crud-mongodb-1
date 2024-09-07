@@ -12,5 +12,8 @@
         <logger name="org.hibernate" level="OFF" additivity="false">
             <AppenderRef ref="LogToConsole"/>
         </logger>
+<!--        <logger name="org.mongodb.driver" level="OFF" additivity="false">-->
+<!--            <AppenderRef ref="LogToConsole"/>-->
+<!--        </logger>-->
     </Loggers>
 </Configuration>
