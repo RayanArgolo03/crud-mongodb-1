@@ -41,13 +41,13 @@ public final class Main {
                 option = ReaderUtils.readOption(UserOption.class);
 
                 switch (option) {
-                    case CREATE -> System.out.printf("User created! %s", CONTROLLER.create());
+                    case CREATE -> System.out.printf("User created: %s \n", CONTROLLER.create());
 
                     case READ -> CONTROLLER.read().forEach(System.out::println);
 
-                    //Todo continuar de update
-                    case UPDATE -> CONTROLLER.update();
-                    case DELETE -> CONTROLLER.delete();
+                    case UPDATE -> System.out.printf("User updated: %s \n", CONTROLLER.update());
+
+                    case DELETE -> System.out.printf("User deleted: %s \n", CONTROLLER.delete());
                 }
 
             } catch (InputMismatchException | ArrayIndexOutOfBoundsException e) {

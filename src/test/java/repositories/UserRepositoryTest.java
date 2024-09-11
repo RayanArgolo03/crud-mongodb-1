@@ -1,7 +1,8 @@
 package repositories;
 
+import com.google.gson.Gson;
 import database.MongoConnection;
-import filters.UserFilter;
+import params.UserParam;
 import model.Login;
 import model.User;
 import org.bson.Document;
@@ -12,10 +13,7 @@ import repositories.impl.UserRepositoryImpl;
 import repositories.interfaces.UserRepository;
 import utils.GsonUtils;
 
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserRepositoryTest {
 
@@ -33,9 +31,14 @@ class UserRepositoryTest {
 
         @Test
         void test() {
-            User entity = new User("pa", "pa", new Login("pa", "pa"));
-            Set<Document> documents = repository.findByFilters(new UserFilter(entity.getName(), entity.getEmail(), entity.getLogin().getUsername(), entity.getLogin().getPassword()));
-            assertEquals(1, documents.size());
+            UserParam find = new UserParam("pa", "pa", "pa", "pa");
+            UserParam update = new UserParam("ji", "oa", "pa", "pa");
+
+            repository.save(document);
+
+            assertNotNull(repository.findByParams(find));
+            assertNotNull(repository.findAndUpdateByParams(find, update));
+            assertNotNull(repository.findAndDeleteByParams(update));
         }
 
     }

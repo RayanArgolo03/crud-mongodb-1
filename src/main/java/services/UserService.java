@@ -1,12 +1,12 @@
 package services;
 
-import com.google.gson.Gson;
+import com.mongodb.MongoException;
 import dtos.UserRequest;
 import dtos.UserResponse;
-import enums.FilterOption;
+import enums.ParamOption;
 import exceptions.BusinessException;
 import exceptions.DatabaseException;
-import filters.UserFilter;
+import params.UserParam;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,45 +36,81 @@ public final class UserService {
         }
     }
 
-    public UserFilter readFilters() {
 
-        final UserFilter userFilter = new UserFilter();
+    public Set<UserResponse> findByParams(final UserParam userParam) {
 
-        FilterOption option;
-        String input = null;
+        Objects.requireNonNull(userParam, "No filters to find users!");
 
-        while ((option = ReaderUtils.readOption(FilterOption.class)) != FilterOption.OUT) {
-
-            input = ReaderUtils.readString(option.name());
-
-            switch (option) {
-                case NAME -> userFilter.setName(input);
-                case EMAIL -> userFilter.setEmail(input);
-                case USERNAME -> userFilter.setUsername(input);
-                case PASSWORD -> userFilter.setPassword(input);
-            }
-
-            System.out.printf("Filter defined: %s in %s\n", input, option);
-
-        }
-
-        return (input == null) ? null : userFilter;
-    }
-
-    public Set<UserResponse> findByFilters(final UserFilter userFilter) {
-
-        Objects.requireNonNull(userFilter, "No filters to find users!");
-
-        final Set<Document> documents = repository.findByFilters(userFilter);
+        final Set<Document> documents = repository.findByParams(userParam);
         if (documents.isEmpty()) throw new BusinessException("Users not found by filters!");
 
         return documents.stream()
                 .map(document -> {
                     User user = GsonUtils.documentToEntity(document, User.class);
-                    user.setId(document.getObjectId("id"));
+                    user.setId(document.getObjectId("_id"));
                     return this.userToResponse(user);
                 })
                 .collect(Collectors.toSet());
+    }
+
+    public UserResponse findAndUpdateByParams(final UserParam params, final UserParam updateValues) {
+
+        Objects.requireNonNull(params, "No filters to find users!");
+        Objects.requireNonNull(params, "No values to update!");
+
+        //If value exists, throw MongoWrite exception
+        try {
+            final Document document = repository.findAndUpdateByParams(params, updateValues);
+
+            if (document == null) throw new BusinessException("User not found by filters, no update!");
+
+            final User user = GsonUtils.documentToEntity(document, User.class);
+            user.setId(document.getObjectId("_id"));
+
+            return this.userToResponse(user);
+
+        } catch (MongoException e) {
+            throw new DatabaseException("Duplicate email in update!", e);
+        }
+    }
+
+    public UserResponse findAndDeleteByParams(final UserParam params) {
+
+        Objects.requireNonNull(params, "No filters to delete users!");
+
+        final Document deletedDocument = repository.findAndDeleteByParams(params);
+        if (deletedDocument == null) throw new BusinessException("Users not deleted by filters");
+
+        final User user = GsonUtils.documentToEntity(deletedDocument, User.class);
+        user.setId(deletedDocument.getObjectId("_id"));
+
+        return this.userToResponse(user);
+
+    }
+
+    public UserParam readParams() {
+
+        final UserParam userParam = new UserParam();
+
+        ParamOption option;
+        String input = null;
+
+        while ((option = ReaderUtils.readOption(ParamOption.class)) != ParamOption.OUT) {
+
+            input = ReaderUtils.readString(option.name());
+
+            switch (option) {
+                case NAME -> userParam.setName(input);
+                case EMAIL -> userParam.setEmail(input);
+                case USERNAME -> userParam.setUsername(input);
+                case PASSWORD -> userParam.setPassword(input);
+            }
+
+            System.out.printf("%s in %s\n", input, option);
+
+        }
+
+        return (input == null) ? null : userParam;
     }
 
 
@@ -125,6 +161,7 @@ public final class UserService {
         try {
             return repository.save(GsonUtils.entityToDocument(user));
 
+            //If user has existing email, throw exception
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
         }

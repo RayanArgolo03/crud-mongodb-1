@@ -47,7 +47,7 @@ public final class MongoConnection {
         return INSTANCE;
     }
 
-    //Test connection
+    //Testing connection, ping
     private void testConnection(MongoDatabase database) {
 
         try {

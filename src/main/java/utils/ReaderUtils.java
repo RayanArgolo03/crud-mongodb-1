@@ -25,7 +25,7 @@ public final class ReaderUtils {
     }
 
     public static String readString(final String title) {
-        System.out.printf("\nEnter with %s:", title);
+        System.out.printf("\nEnter with %s: ", title);
         return SCANNER.next();
     }
 

@@ -2,7 +2,7 @@ package controllers;
 
 import dtos.UserRequest;
 import dtos.UserResponse;
-import filters.UserFilter;
+import params.UserParam;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,22 +27,25 @@ public final class UserController {
 
         log.info("Creating login info..");
 
-        final String username = ReaderUtils.readString("username (at least 2 characters)");
+//        final String username = ReaderUtils.readString("username (at least 2 characters)");
+        final String username = "Ja";
         service.validateInput(username);
 
         service.findUsername(username);
-        log.info("Username not exists!");
 
-        final String password = ReaderUtils.readString("password (at least 2 characters)");
+//        final String password = ReaderUtils.readString("password (at least 2 characters)");
+        final String password = "Ja";
         service.validateInput(password);
 
         log.info("Creating user info..");
 
-        final String name = service.validateAndFormatFirstName(
-                ReaderUtils.readString("first name (at least 2 characters and without special symbols)")
-        );
+//        final String name = service.validateAndFormatFirstName(
+//                ReaderUtils.readString("first name (at least 2 characters and without special symbols)")
+//        );
+        final String name = "Ja";
 
-        final String email = ReaderUtils.readString("email (pattern xxx@domain.com)");
+//        final String email = ReaderUtils.readString("email (pattern xxx@domain.com)");
+        final String email = "rayan@gmail.com";
         service.validateEmail(email);
 
         User user = service.requestToUser(
@@ -52,25 +55,38 @@ public final class UserController {
         final Document document = service.save(user);
 
         user = GsonUtils.documentToEntity(document, User.class);
-        user.setId(document.getObjectId("id"));
+        user.setId(document.getObjectId("_id"));
 
         return service.userToResponse(user);
     }
 
     public Set<UserResponse> read() {
 
-        final UserFilter userFilter = service.readFilters();
-        final Set<UserResponse> users = service.findByFilters(userFilter);
+        log.info("Receiving filters to find.. \n");
+        final UserParam userParam = service.readParams();
+
+        final Set<UserResponse> users = service.findByParams(userParam);
 
         log.info("Users found! \n");
         return users;
     }
 
-    public void update() {
+    public UserResponse update() {
 
+        log.info("Receiving filters to find.. \n");
+        final UserParam params = service.readParams();
+
+        log.info("Receiving values to update.. \n");
+        final UserParam updateValues = service.readParams();
+
+        return service.findAndUpdateByParams(params, updateValues);
     }
 
-    public void delete() {
+    public UserResponse delete() {
 
+        log.info("Receiving filters to find and delete.. \n");
+        final UserParam params = service.readParams();
+
+        return service.findAndDeleteByParams(params);
     }
 }

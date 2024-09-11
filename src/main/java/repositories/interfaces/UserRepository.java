@@ -1,8 +1,7 @@
 package repositories.interfaces;
 
 
-import filters.UserFilter;
-import model.User;
+import params.UserParam;
 import org.bson.Document;
 
 import java.util.Optional;
@@ -12,7 +11,9 @@ public interface UserRepository {
 
     Optional<Document> findUsername(String username);
 
-    Set<Document> findByFilters(UserFilter userFilter);
+    Set<Document> findByParams(UserParam userParam);
+    Document findAndUpdateByParams(UserParam userParam, UserParam updateValues);
+    Document findAndDeleteByParams(UserParam userParam);
 
     Document save(Document document);
 }
