@@ -1,11 +1,9 @@
 package services;
 
-import jdk.jfr.Frequency;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import repositories.UserRepository;
+import repositories.interfaces.UserRepository;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor

@@ -1,30 +1,22 @@
 package model;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import org.bson.types.ObjectId;
 
-@NoArgsConstructor(force = true)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-
-@Entity
-@Table(name = "logins")
 public final class Login {
 
-    @GeneratedValue
-    @Id
-    UUID id;
+    private final ObjectId id = new ObjectId();
+    private final String password;
 
-    @Column(unique = true, nullable = false)
-    String username;
+    public Login(String password) {
+        this.password = password;
+    }
 
-    @Column(nullable = false)
-    String password;
+    public ObjectId getId() {
+        return id;
+    }
 
+    public String getPassword() {
+        return password;
+    }
 }

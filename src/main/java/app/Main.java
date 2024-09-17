@@ -1,12 +1,14 @@
-package main;
+package app;
 
 
 import controllers.UserController;
 import enums.UserOption;
-import jpa.JpaManager;
+import jpa.MongoConnection;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+import model.Login;
+import model.User;
 import repositories.impl.UserRepositoryImpl;
 import services.UserService;
 import utils.ReaderUtils;
@@ -17,8 +19,13 @@ import java.util.InputMismatchException;
 @Log4j2
 public final class Main {
 
+    private Main() {
+    }
+
+    static MongoConnection CONNECTION = MongoConnection.getInstance();
+
     static UserController CONTROLLER = new UserController(new UserService(
-            new UserRepositoryImpl(new JpaManager("h2"))
+            new UserRepositoryImpl(CONNECTION)
     ));
 
     public static void main(String[] args) {
@@ -29,6 +36,8 @@ public final class Main {
 
             try {
                 option = ReaderUtils.readOption();
+
+                //Todo code com Codec Registry e aprende Records no DTO
 
                 switch (option) {
                     case CREATE -> CONTROLLER.create();

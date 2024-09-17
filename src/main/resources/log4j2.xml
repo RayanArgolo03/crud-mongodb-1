@@ -6,6 +6,8 @@
         </Console>
     </Appenders>
     <Loggers>
+        <Logger name="org.mongodb.driver" level="OFF"/>
+
         <Root level="info">
             <AppenderRef ref="LogToConsole"/>
         </Root>

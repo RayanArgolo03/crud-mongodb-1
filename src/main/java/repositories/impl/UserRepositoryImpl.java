@@ -1,14 +1,23 @@
 package repositories.impl;
 
-import jpa.JpaManager;
+import com.mongodb.client.MongoCollection;
+import jpa.MongoConnection;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import repositories.UserRepository;
+import model.User;
+import repositories.interfaces.UserRepository;
 
-@AllArgsConstructor
-@RequiredArgsConstructor
 public final class UserRepositoryImpl implements UserRepository {
 
-    JpaManager jpaManager;
+    private final MongoCollection<User> collection;
 
+    public UserRepositoryImpl(MongoConnection mongoConnection) {
+        this.collection = mongoConnection.getDatabase().getCollection("users", User.class);
+    }
+
+    @Override
+    public void save(final User user) {
+        collection.insertOne(user);
+        System.out.println();
+    }
 }

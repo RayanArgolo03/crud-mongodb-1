@@ -1,41 +1,27 @@
 package model;
 
-import jakarta.persistence.*;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.java.Log;
-import org.hibernate.annotations.*;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
-@NoArgsConstructor(force = true)
-
-
-@DynamicInsert
-@DynamicUpdate
-@Table(name = "users")
+import org.bson.types.ObjectId;
 public final class User {
 
-    @GeneratedValue
-    @Id
-    final UUID id;
+    private ObjectId id;
+    private final String firstName;
+    private  final  Login login;
 
-    @Setter
-    @Column(name = "first_name", nullable = false)
-    String firstName;
+    public User(String firstName, Login login) {
+        this.firstName = firstName;
+        this.login = login;
+    }
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    final Login login;
+    public ObjectId getId() {
+        return id;
+    }
 
-    @CreationTimestamp
-    @Column(name = "creation_date")
-    final LocalDateTime creationDate;
+    public Login getLogin() {
+        return login;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
 }
