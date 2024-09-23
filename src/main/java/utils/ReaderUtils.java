@@ -9,20 +9,24 @@ import java.util.Scanner;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public final class ReaderUtils {
 
-    static UserOption[] VALUES = UserOption.values();
     static Scanner SCANNER = new Scanner(System.in);
 
-    public static UserOption readOption() {
+    public static <T extends Enum<T>> T readOption(final Class<T> enumClass) {
+
+        T[] enumConstants = enumClass.getEnumConstants();
 
         System.out.println("Enter with your option: ");
 
-        for (UserOption value : VALUES)
-            System.out.printf("%d - %s \n",
-                    value.ordinal(), value.getFormattedName());
+        for (T enumm : enumConstants) System.out.printf("%d - %s \n",enumm.ordinal(), enumm.name());
 
         int option = SCANNER.nextInt();
 
-        return VALUES[option];
+        return enumConstants[option];
+    }
+
+    public static String readString(final String title) {
+        System.out.printf("Enter with %s: ", title);
+        return SCANNER.next();
     }
 
 }

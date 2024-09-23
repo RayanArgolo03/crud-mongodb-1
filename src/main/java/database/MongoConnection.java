@@ -1,4 +1,4 @@
-package jpa;
+package database;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClientSettings;
@@ -6,10 +6,8 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
